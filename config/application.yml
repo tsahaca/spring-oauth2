@@ -1,0 +1,41 @@
+logging:
+  level:
+    org.springframework.security: DEBUG
+    org.springframework.web: DEBUG
+    com.westernasset.spectra: DEBUG
+  file: application.log
+  file.max-size: 10 MB
+  file.max-history: 1
+      
+security:
+  basic:
+    enabled: false
+  oauth2:
+    client:
+      clientId: client
+      clientSecret: password123
+    resource:
+      tokenInfoUri: https://localhost:9443/as/introspect.oauth2
+ 
+server:
+  port: 8443
+  ssl:
+    key-store: file:config/keystore.p12
+    key-store-password: changeit
+    keyStoreType: PKCS12
+    keyAlias: tomcat
+
+client:
+  cert:
+    key-store: file:config/client-cert-keystore.p12
+    key-store-password: Secret12
+    keyStoreType: PKCS12
+
+# curl --cacert mycertfile.pem --user "sailpoint:western45" --request POST -d grant_type=client_credentials https://devwping1/as/token.oauth2
+# openssl pkcs12 -export -in certificate.crt -inkey privateKey.key -out keystore.p12 -name tomcat -passout pass:Secret12
+# curl -k --cert keystore.pem:Secret12 -d "grant_type=client_credentials&client_id=sailpoint" -H "Content-Type: application/x-www-form-urlencoded" -X POST https://devwping1:9443/as/token.oauth2
+# {"access_token":"Mw4dv1452j5i3rnR0UKSei62oWmw","token_type":"Bearer","expires_in":7200}
+
+# curl -k --cert keystore.pem:Secret12 -d "token=Mw4dv1452j5i3rnR0UKSei62oWmw&client_id=sailpoint" -H "Content-Type: application/x-www-form-urlencoded" -X POST https://devwping1:9443/as/introspect.oauth2
+# {"active":true,"token_type":"Bearer","exp":1522014250,"client_id":"sailpoint"}
+    
